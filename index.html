@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Fabric.Js Free Drawing for Whiteboard </title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+
+  <button onclick="createCanvas()"><i class="fa fa-plus-circle"></i>Create Canvas</button>
+  <button onclick="addRect()"><i class="fa fa-square"></i>Add Rect</button>
+  <button onclick="addCircle()"><i class="fa fa-circle"></i>Add Circle</button>
+  <button onclick="addTriangle()"><i class="fa fa-caret-up"></i>Add Triangle</button>
+  <button onclick="addPath()"><i class="fa fa-star"></i>Add Path</button>
+  <button onclick="addText()"><i class="fa fa-font"></i>Add Text</button>
+  <button onclick="addGroup()"><i class="fa fa-object-group"></i>Add Group</button>
+  <button onclick="cleanCanvas()"><i class="fa fa-trash"></i>Clean Canvas</button>
+  <button onclick="pen()"><i class="fa fa-pencil"></i>Pen Mode</button>
+  <button onclick="highlighter()"><i class="fa fa-magic"></i>Highlight Mode</button>
+  <button onclick="selection()"><i class="fa fa-mouse-pointer"></i>Selection Mode</button>
+  <button onclick="eraser()"><i class="fa fa-eraser"></i>Eraser Mode</button>
+  <button onclick="zoomIn()"><i class="fa fa-plus-circle"></i>Zoom In</button>
+  <button onclick="zoomOut()"><i class="fa fa-plus-circle"></i>Zoom Out</button>
+  <button onclick="zoomReset()"><i class="fa fa-plus-circle"></i>Zoom Reset</button>
+  <button onclick="deleteCanvas()"><i class="fa fa-minus-circle"></i>Delete Canvas</button>
+
+  <button onclick="alert(generateUUID())"><i class="fa fa-arrow"></i>GENERATE UUID</button>
+
+  <div>Thickness: <input id="thickness" value="7" max="50" min="1" type="range" onchange="changeThickness(value)"></div>
+  <div>Opacity: <input id="opacity" value="100" max="100" min="1" type="range" onchange="changeOpacity(value)"></div>
+  <div>Color: <input type="color" value="#ff0000" onchange="changeColor(value)"></div>
+
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js'></script> -->
+  <script  src="./fabric.min.js"></script>
+  <script  src="./script.js"></script>
+
+</body>
+</html>
