@@ -1,6 +1,7 @@
 // Author: Bahadır Doğru bahadirdogru.com
 // https://github.com/bahadirdogru
 
+
 // Windows screen object.   
 var win;
 // Canvas element
@@ -65,11 +66,13 @@ function createCanvas() {
         canvas.height = height;
         ctx = canvas.getContext("2d");
         document.body.appendChild(canvas);
+        document.onkeydown = function(e) {
+             keydown(e);
+        }
     }
 
     // create a wrapper around native canvas element (with id="c")
     canvas = new fabric.Canvas('c');
-
     canvas.selection = true;
     window.canvas = canvas;
     opacityEl = document.querySelector('#opacity');
@@ -227,6 +230,39 @@ function changeOpacity(value){
     opacityEl.value = opacity * 100;
 }
 
+function saveCanvas(){
+    console.log("saveCanvas()");
+    var dataURL = canvas.toDataURL({
+        format: 'jpeg',
+        quality: 0.8
+    });
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'calisma.jpg';
+    link.click();
+}
+
+function addImage(){
+    console.log("addImage()");
+    var imgUrl = 'image.png';
+    var img = new Image();
+    img.onload = function() {
+        var image = new fabric.Image(img, {
+            left: 10,
+            top: 10,
+            angle: 0,
+            opacity: opacity,
+            // scaleX: 0.5,
+            // scaleY: 0.5,
+            // originX: 'center',
+            // originY: 'center',
+            UUID: generateUUID()
+        });
+        canvas.add(image);
+    }
+    img.src = 'image.png';
+}
+
 function deleteCanvas() {
     console.log("deleteCanvas()");
     canvas.clear();
@@ -354,18 +390,24 @@ function zoomReset() {
 
 function keydown(e) {
     console.log("keydown()");
-
-    if (!this.stop) {
         console.log(`keykode: ${e.which}, type: ${e.type}, key:${e.key}`);
         switch (e.which) {
             case 8: // backspace
-                this.erase();
+                canvas.getActiveObjects().forEach((obj) => {
+                    canvas.remove(obj)
+                });
+                canvas.discardActiveObject().renderAll()
+                break;
+            case 46: // delete
+                canvas.getActiveObjects().forEach((obj) => {
+                    canvas.remove(obj)
+                });
+                canvas.discardActiveObject().renderAll()
                 break;
             case 27: // escape
                 this.exit();
                 break;
         }
-    }
 }
 
 function generateUUID(){
@@ -380,3 +422,37 @@ function generateUUID(){
     });
     return uuid;
 }
+
+
+function openImage(e) {
+    // from https://codepen.io/G470/pen/PLbMLL
+    console.log("openImage()");
+    var inputforupload = e;
+    var readerobj = new FileReader();
+
+    readerobj.onload = function () {
+        var imgElement = document.createElement('img');
+        imgElement.src = readerobj.result;
+
+        imgElement.onload = function () {
+
+            console.log(imgElement.width);
+            console.log(imgElement.height);
+
+            var imageinstance = new fabric.Image(imgElement, {
+                left: 10,
+                top: 10,
+                angle: 0,
+                opacity: opacity,
+                UUID: generateUUID()
+            });
+
+            canvas.add(imageinstance);
+            //canvas.centerObject(imageinstance);
+
+        };
+
+    };
+    console.log(inputforupload.files[0]);
+    readerobj.readAsDataURL(inputforupload.files[0]);
+};
