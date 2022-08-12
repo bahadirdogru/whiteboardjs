@@ -230,8 +230,79 @@ function changeOpacity(value){
     opacityEl.value = opacity * 100;
 }
 
+function sendToBack(){
+    console.log("sendToBack()");
+    canvas.sendToBack(canvas.getActiveObject());
+}
+
+function bringToFront(){
+    console.log("bringToFront()");
+    canvas.bringToFront(canvas.getActiveObject());
+}
+
+function sendBackwards(){
+    console.log("sendBackwards()");
+    canvas.sendBackwards(canvas.getActiveObject());
+}
+
+function bringForward(){
+    console.log("bringForward()");
+    canvas.bringForward(canvas.getActiveObject());
+}
+
+function removeActiveObject(){
+    console.log("removeActiveObject()");
+    canvas.remove(canvas.getActiveObject());
+}
+
+function removeActiveGroup(){
+    console.log("removeActiveGroup()");
+    canvas.getActiveObject().forEachObject(function(o){
+        canvas.remove(o);
+    }).then(function(){
+        canvas.discardActiveObject();
+    }).then(function(){
+        canvas.renderAll();
+    })
+}
+
+
+function makeGroup() {
+    console.log("makeGroup()");
+    // from http://jsfiddle.net/softvar/NuE78/1/
+    var activegroup = canvas.getActiveObject() == null ? canvas.getActiveGroup() : canvas.getActiveObject()
+    var objectsInGroup = activegroup.getObjects();
+
+    activegroup.clone(function (newgroup) {
+        canvas.discardActiveGroup();
+        objectsInGroup.forEach(function (object) {
+            canvas.remove(object);
+        });
+        canvas.add(newgroup);
+    });
+}
+
+function makeUngroup() {
+    console.log("makeUngroup()");
+    //from http://jsfiddle.net/softvar/NuE78/1/
+    var activeObject = canvas.getActiveObject() == null ? canvas.getActiveGroup() : canvas.getActiveObject()
+    if (activeObject.type == "group") {
+        var items = activeObject._objects;
+        alert(items);
+        activeObject._restoreObjectsState();
+        canvas.remove(activeObject);
+        for (var i = 0; i < items.length; i++) {
+            canvas.add(items[i]);
+            canvas.item(canvas.size() - 1).hasControls = true;
+        }
+        canvas.renderAll();
+    }
+}
+
 function saveCanvas(){
     console.log("saveCanvas()");
+    canvas.backgroundColor = '#ffffff';
+    canvas.renderAll();
     var dataURL = canvas.toDataURL({
         format: 'jpeg',
         quality: 0.8
@@ -393,10 +464,10 @@ function keydown(e) {
         console.log(`keykode: ${e.which}, type: ${e.type}, key:${e.key}`);
         switch (e.which) {
             case 8: // backspace
-                canvas.getActiveObjects().forEach((obj) => {
-                    canvas.remove(obj)
-                });
-                canvas.discardActiveObject().renderAll()
+                // canvas.getActiveObjects().forEach((obj) => {
+                //     canvas.remove(obj)
+                // });
+                // canvas.discardActiveObject().renderAll()
                 break;
             case 46: // delete
                 canvas.getActiveObjects().forEach((obj) => {
