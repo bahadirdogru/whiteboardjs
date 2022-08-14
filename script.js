@@ -20,7 +20,7 @@ var width = 0;
 
 // zoom feature thanks "SWAGAT PARIDA" for Example: https://github.com/swagatblog/FabricJS_Drawing/blob/master/core.js
 var canvasScale = 1;
-var SCALE_FACTOR = 1.2;
+var SCALE_FACTOR = 1.1;
 
 
 function vindow() {
@@ -270,33 +270,44 @@ function removeActiveGroup(){
 function makeGroup() {
     console.log("makeGroup()");
     // from http://jsfiddle.net/softvar/NuE78/1/
-    var activegroup = canvas.getActiveObject() == null ? canvas.getActiveGroup() : canvas.getActiveObject()
-    var objectsInGroup = activegroup.getObjects();
-
-    activegroup.clone(function (newgroup) {
-        canvas.discardActiveGroup();
-        objectsInGroup.forEach(function (object) {
-            canvas.remove(object);
-        });
-        canvas.add(newgroup);
-    });
+    // from = http://fabricjs.com/manage-selection
+    if (!canvas.getActiveObject()) {
+        return;
+      }
+      if (canvas.getActiveObject().type !== 'activeSelection') {
+        return;
+      }
+      canvas.getActiveObject().toGroup();
+      canvas.requestRenderAll();
 }
 
 function makeUngroup() {
     console.log("makeUngroup()");
     //from http://jsfiddle.net/softvar/NuE78/1/
-    var activeObject = canvas.getActiveObject() == null ? canvas.getActiveGroup() : canvas.getActiveObject()
-    if (activeObject.type == "group") {
-        var items = activeObject._objects;
-        alert(items);
-        activeObject._restoreObjectsState();
-        canvas.remove(activeObject);
-        for (var i = 0; i < items.length; i++) {
-            canvas.add(items[i]);
-            canvas.item(canvas.size() - 1).hasControls = true;
-        }
-        canvas.renderAll();
-    }
+    if (!canvas.getActiveObject()) {
+        return;
+      }
+      if (canvas.getActiveObject().type !== 'group') {
+        return;
+      }
+      canvas.getActiveObject().toActiveSelection();
+      canvas.requestRenderAll();
+}
+
+function selectAll() {
+    console.log("selectAll()");
+    canvas.discardActiveObject();
+    var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+      canvas: canvas,
+    });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
+}
+
+function unSelectAll() {
+    console.log("unSelectAll()");
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
 }
 
 function saveCanvas(){
@@ -397,7 +408,7 @@ function zoomIn () {
         objects[i].setCoords();
     }
 
-    canvas.renderAll();
+    canvas.requestrenderAll();
 }
 
 function zoomOut() {
