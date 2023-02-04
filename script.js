@@ -67,7 +67,7 @@ function createCanvas() {
         ctx = canvas.getContext("2d");
         document.body.appendChild(canvas);
         document.onkeydown = function(e) {
-             keydown(e);
+        keydown(e);
         }
     }
 
@@ -185,6 +185,7 @@ function addText() {
 function cleanCanvas(){
     console.log("cleanCanvas()");
     canvas.clear()
+    addImage();
 }
 
 function hexToRgbA(hex,opacity) {
@@ -340,10 +341,20 @@ function addImage(){
             // originY: 'center',
             UUID: generateUUID()
         });
+        console.log(image);
         canvas.add(image);
     }
     img.src = 'image.png';
 }
+
+function selectObjectByUUID(UUID){
+    console.log("selectObjectByUUID()");
+    canvas.getObjects().forEach(function(o){
+        if (o.UUID == UUID) {
+            canvas.setActiveObject(o);
+        }
+})}
+
 
 function deleteCanvas() {
     console.log("deleteCanvas()");
@@ -378,6 +389,7 @@ function selection(){
     console.log("selection()");
     canvas.isDrawingMode = false;
     canvas.selection = true;
+    selectAll();
 }
 
 function zoomIn () {
